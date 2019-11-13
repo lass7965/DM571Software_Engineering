@@ -2,6 +2,6 @@
 
 [Link for mySQL:](https://www.unoeuro.com/en/mysql/?login)
 
-**Username:** * *lkis_dk* *
+**Username:** *lkis_dk*
 
-**Password:** * *DM571Software* *
+**Password:** *DM571Software*
