@@ -21,6 +21,17 @@ def getPasswd(username):
     cursor.close()
     return ret
 
+#Perhaps a more secure login, as the real password never enters the machine, and is handled by the SQL server?
+def checkPasswd(username,passwd):
+    try:
+        cursor = logindb.cursor()
+        cursor.execute("SELECT t1.username FROM Login AS t1 WHERE t1.username = '%s' AND t1.password = '%s';" % (username,passwd))
+        ret = cursor.fetchone()[0]
+        cursor.close()
+        return True
+    except:
+        return False
+
 def updateLastLogin(username):
     cursor = logindb.cursor()
     today = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
@@ -50,4 +61,3 @@ def getPermissionLevel(username):
     cursor.execute("SELECT t1.Permission FROM Login AS t1 WHERE t1.username = '%s';" % username)
     return cursor.fetchone()[0]
     cursor.close()
-
