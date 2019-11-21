@@ -20,7 +20,10 @@ def getFullTable():
 def getUUID(username):
     cursor = logindb.cursor()
     cursor.execute("SELECT User.UserID FROM User WHERE User.Username = '%s';" % username)
-    ret = cursor.fetchone()[0].decode()
+    try:
+        ret = cursor.fetchone()[0].decode()
+    except:
+        return False
     cursor.close()
     return ret
 
@@ -35,6 +38,8 @@ def getPasswd(username):
 #Perhaps a more secure login, as the real password never enters the machine, and is handled by the SQL server?
 def checkPasswd(username,passwd):
     UUID = getUUID(username)
+    if(UUID == False):
+        return False
     cursor = logindb.cursor()
     cursor.execute("SELECT t1.UserID FROM Login AS t1 WHERE t1.UserID = '%s' AND t1.Password = '%s';" % (UUID, passwd))
     try:
@@ -77,9 +82,43 @@ def createUser(username, password, email, permission):
         cursor.close()
 
 def getPermissionLevel(username):
-    UUID = getUUID(username)
     cursor = logindb.cursor()
-    cursor.execute("SELECT t1.Permission FROM Login AS t1 WHERE t1.UserID = '%s';" % UUID)
+    cursor.execute("SELECT User.Permission FROM User WHERE User.Username = '%s';" % username)
     ret = cursor.fetchone()[0]
     cursor.close()
     return ret
+
+def getScore(username):
+    cursor = logindb.cursor()
+    cursor.execute("SELECT User.Score FROM User WHERE User.Username = '%s';" % username)
+    ret = cursor.fetchone()[0]
+    cursor.close()
+    return ret
+
+def updateScore(username, score):
+    cursor = logindb.cursor()
+    cursor.execute("UPDATE User SET Score = "+str(score)+" WHERE User.Username = '%s'" % username)
+    logindb.commit()
+    cursor.close()
+
+def getGroup(username):
+    cursor = logindb.cursor()
+    cursor.execute("SELECT User.Groups FROM User WHERE User.Username = '%s';" % username)
+    ret = cursor.fetchone()[0]
+    cursor.close()
+    return ret
+
+def updateGroup(username, group):
+    cursor = logindb.cursor()
+    cursor.execute("UPDATE User SET Groups = "+group+" WHERE User.Username = '%s'" % username)
+    logindb.commit()
+    cursor.close()
+
+def getUser(username):
+    cursor = logindb.cursor()
+    cursor.execute("SELECT * FROM User WHERE User.Username = '%s';" % username)
+    ret = cursor.fethone()[0]
+    cursor.close()
+    return ret
+
+createUser("test","tester","testing@gmail.com",1)
