@@ -38,6 +38,7 @@ def main():
                 currentuser.listUnoccupiedShows()
             elif command == "logOut":
                 currentuser.logOut()
+                session = False
             elif command == "changePassword":
                 currentuser.changePassword("xXxXxX")
             elif command == "listUsers":
