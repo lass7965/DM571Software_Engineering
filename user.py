@@ -6,7 +6,7 @@ class user:
         self.permissions = perm
     def takeShift(self, date):
         print("taking shift on" + str(date))
-    def viewRoser(self):
+    def viewRoster(self):
         print("Roster")
     def cancelShift(self, date):
         print("Canceling shift at" + str(date))
