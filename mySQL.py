@@ -10,9 +10,16 @@ try:
 except:
     print("Connection to the mySQL failed!")
 
-def getFullTable():
+def getUserTable():
     cursor = logindb.cursor()
-    cursor.execute("SELECT * FROM Login")
+    cursor.execute("SELECT * FROM User")
+    ret = cursor.fetchall()
+    cursor.close()
+    return ret
+
+def getRosterTable():
+    cursor = logindb.cursor()
+    cursor.execute("SELECT * FROM Roster")
     ret = cursor.fetchall()
     cursor.close()
     return ret
@@ -24,14 +31,6 @@ def getUUID(username):
         ret = cursor.fetchone()[0].decode()
     except:
         return False
-    cursor.close()
-    return ret
-
-def getPasswd(username):
-    UUID = getUUID(username)
-    cursor = logindb.cursor()
-    cursor.execute("SELECT t1.password FROM Login AS t1 WHERE t1.UserID = '%s';" % UUID)
-    ret = cursor.fetchone()[0]
     cursor.close()
     return ret
 
@@ -50,6 +49,11 @@ def checkPasswd(username,passwd):
         cursor.close()
         return False
 
+def changePassword(username, oldpasswd, newpasswd):
+    UUID = getUUID(username)
+    if(UUID == False):
+        return False
+
 def updateLastLogin(username):
     UUID = getUUID(username)
     cursor = logindb.cursor()
@@ -57,14 +61,6 @@ def updateLastLogin(username):
     cursor.execute("UPDATE Login SET Last_Login = '"+today+"' WHERE Login.UserID = '%s'" % UUID)
     logindb.commit()
     cursor.close()
-
-def getLastLogin(username):
-    UUID = getUUID(username)
-    cursor = logindb.cursor()
-    cursor.execute("SELECT t1.Last_Login FROM Login AS t1 WHERE t1.UserID = '%s';" % UUID)
-    ret = cursor.fetchone()[0]
-    cursor.close()
-    return ret
 
 def createUser(username, password, email, permission):
     cursor = logindb.cursor()
@@ -81,32 +77,11 @@ def createUser(username, password, email, permission):
         print("User or email is already used")
         cursor.close()
 
-def getPermissionLevel(username):
-    cursor = logindb.cursor()
-    cursor.execute("SELECT User.Permission FROM User WHERE User.Username = '%s';" % username)
-    ret = cursor.fetchone()[0]
-    cursor.close()
-    return ret
-
-def getScore(username):
-    cursor = logindb.cursor()
-    cursor.execute("SELECT User.Score FROM User WHERE User.Username = '%s';" % username)
-    ret = cursor.fetchone()[0]
-    cursor.close()
-    return ret
-
 def updateScore(username, score):
     cursor = logindb.cursor()
     cursor.execute("UPDATE User SET Score = "+str(score)+" WHERE User.Username = '%s'" % username)
     logindb.commit()
     cursor.close()
-
-def getGroup(username):
-    cursor = logindb.cursor()
-    cursor.execute("SELECT User.Groups FROM User WHERE User.Username = '%s';" % username)
-    ret = cursor.fetchone()[0]
-    cursor.close()
-    return ret
 
 def updateGroup(username, group):
     cursor = logindb.cursor()
@@ -120,5 +95,3 @@ def getUser(username):
     ret = cursor.fethone()[0]
     cursor.close()
     return ret
-
-createUser("test","tester","testing@gmail.com",1)
