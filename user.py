@@ -1,3 +1,5 @@
+import datetime
+from mySQL import *
 class user:
     def __init__(self, uname, passw, mail, perm, scor, uniqueID, groups):
         self.username = uname
@@ -5,20 +7,25 @@ class user:
         self.email = mail
         self.permissions = perm
         self.score = scor
-        self.UUID = uniqueID
         self.groups = groups
-    def takeShift(self, date, movie_title, group):
-        createShift(date, movie_title, group, self.UUID) #Needs to get implemented
-        #Query for creating a shift
-        #Maybe a query to check if the given date and time is occupied?
-        #Make a query request with the data inside of the userClass
-        print("taking shift on" + str(date))
+    def takeShift(self, dato, movie_title, group):
+        date = datetime.datetime.strptime(dato, "%Y-%m-%d %H:%M:%S")
+        for i in self.groups:
+            if i == group:
+                print("[+] Taking shift on" + str(dato))
+                addShift(self.username, date, group, movie_title)
+                break
+        print("[-] You've entered a wrong command. ")
     def viewRoster(self): #Roster [Date, Movie_Title, Group, UserID]
         #Query to output the whole roster as a list
         print("Roster")
-    def cancelShift(self, date):
-        #Query to remove a shift from the DB given a date
-        print("Canceling shift at" + str(date))
+    def cancelShift(self, dato, movie_title, group):
+        date = datetime.datetime.strptime(dato, "%Y-%m-%d %H:%M:%S")
+        temp = cancelShift(self.username, date, group, movie_title)
+        if temp == True:
+            print("[+] You've succesfully canceled your shift on" + str(dato))
+        else:
+            print("[-] You've unsuccesfully canceled your shift, please try again.")
     def listUpcommingShows(self, number):
         #Query to show a given number of upcomming shows
         #Maybe just output all shows, and then we can take the first X of the list to display

@@ -22,7 +22,7 @@ def main():
         print("You are logged in!")
     # create a user class with the given username
         userTable = getUser(username)  # [UUID, Username, Email, Permission, Score, Groups]
-        currentuser = user(username, password, userTable[2], userTable[3], userTable[4], userTable[0], userTable[5])
+        currentuser = user(username, password, userTable[2], userTable[3], userTable[4], userTable[5])
         session = True
         while session:
             command = input("Enter a command and arguments").split()
