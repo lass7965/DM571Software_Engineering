@@ -1,11 +1,14 @@
 class user:
-    def __init__(self, uname, passw, mail, perm, scor):
+    def __init__(self, uname, passw, mail, perm, scor, uniqueID, groups):
         self.username = uname
         self.password = passw
         self.email = mail
         self.permissions = perm
         self.score = scor
-    def takeShift(self, date):
+        self.UUID = uniqueID
+        self.groups = groups
+    def takeShift(self, date, movie_title, group):
+        createShift(date, movie_title, group, self.UUID) #Needs to get implemented
         #Query for creating a shift
         #Maybe a query to check if the given date and time is occupied?
         #Make a query request with the data inside of the userClass
