@@ -100,7 +100,7 @@ def getUser(username):
 def addShift(username,date,grp, movie):
     UUID = getUUID(username)
     cursor = logindb.cursor()
-    query = "UPDATE Roster SET UserID = '%s' WHERE Roster.Date = '%s' AND Roster.UserID IS NULL AND Roster.movie_title = '%s' AND Roster.grp = '%s'" % (UUID,date,movie,grp)
+    query = "UPDATE Roster SET UserID = '%s' WHERE Roster.Date = '%s' AND Roster.UserID IS NULL AND Roster.movie_title = '%s' AND Roster.grp = '%s' LIMIT 1" % (UUID,date,movie,grp)
     cursor.execute(query)
     cursor.fetchmany()
     if(cursor.rowcount<1):
@@ -119,12 +119,20 @@ def addMovie(date,grp,movie):
 def cancelShift(username,date,grp,movie):
     UUID = getUUID(username)
     cursor = logindb.cursor()
-    cursor.execute("DELETE FROM Roster WHERE Roster.UserID = '%s' AND Roster.Date = '%s' AND Roster.movie_title = '%s' AND Roster.grp = '%s'" %(UUID,date,movie,grp))
+    cursor.execute("DELETE FROM Roster WHERE Roster.UserID = '%s' AND Roster.Date = '%s' AND Roster.movie_title = '%s' AND Roster.grp = '%s' LIMIT 1" %(UUID,date,movie,grp))
     logindb.commit()
     cursor.close()
 
-def showShifts(username, date, deltadate, grp, movie):
-
+def listShows(username, fromdate, todate, grp, movie):
+    if(username) == None:
+        UUID = "*"
+    else:
+        UUID = getUUID(username)
+    cursor = logindb.cursor()
+    cursor.execute("SELECT * FROM Roster WHERE Roster.UserID = '%s' AND Roster.Date > '%s' AND Roster.Date < '%s' AND Roster.movie_title = '%s' AND Roster.grp = '%s'" % (UUID,fromdate,todate, movie, grp))
+    ret = cursor.fetchall()
+    cursor.close()
+    return ret
 
 date = datetime.datetime(2019,11,21,21,0)
-cancelShift("Lasse",date,"None","Movie#1")
+addShift("Lasse",date,"None","Movie#1")
