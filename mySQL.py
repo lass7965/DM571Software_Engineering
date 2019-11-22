@@ -1,5 +1,6 @@
 import mysql.connector
 import datetime
+import bytestring
 try:
     logindb = mysql.connector.connect(
         host = "mysql23.unoeuro.com",
@@ -95,3 +96,35 @@ def getUser(username):
     ret = cursor.fethone()[0]
     cursor.close()
     return ret
+
+def addShift(username,date,grp, movie):
+    UUID = getUUID(username)
+    cursor = logindb.cursor()
+    query = "UPDATE Roster SET UserID = '%s' WHERE Roster.Date = '%s' AND Roster.UserID IS NULL AND Roster.movie_title = '%s' AND Roster.grp = '%s'" % (UUID,date,movie,grp)
+    cursor.execute(query)
+    cursor.fetchmany()
+    if(cursor.rowcount<1):
+        query = "INSERT INTO Roster VALUES('%s','%s','%s' ,'%s');" %(date,movie,grp,UUID)
+        cursor.execute(query)
+    logindb.commit()
+    cursor.close()
+    return True
+
+def addMovie(date,grp,movie):
+    cursor = logindb.cursor()
+    cursor.execute("INSERT INTO Roster VALUES('%s','%s','%s',NULL)"%(date,movie,grp))
+    logindb.commit()
+    cursor.close()
+
+def cancelShift(username,date,grp,movie):
+    UUID = getUUID(username)
+    cursor = logindb.cursor()
+    cursor.execute("DELETE FROM Roster WHERE Roster.UserID = '%s' AND Roster.Date = '%s' AND Roster.movie_title = '%s' AND Roster.grp = '%s'" %(UUID,date,movie,grp))
+    logindb.commit()
+    cursor.close()
+
+def showShifts(username, date, deltadate, grp, movie):
+
+
+date = datetime.datetime(2019,11,21,21,0)
+cancelShift("Lasse",date,"None","Movie#1")
