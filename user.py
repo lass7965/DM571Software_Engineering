@@ -10,7 +10,7 @@ class user:
         #Maybe a query to check if the given date and time is occupied?
         #Make a query request with the data inside of the userClass
         print("taking shift on" + str(date))
-    def viewRoster(self):
+    def viewRoster(self): #Roster [Date, Movie_Title, Group, UserID]
         #Query to output the whole roster as a list
         print("Roster")
     def cancelShift(self, date):
