@@ -18,6 +18,8 @@ class user:
         print("[-] You've entered a wrong command. ")
     def viewRoster(self): #Roster [Date, Movie_Title, Group, UserID]
         #Query to output the whole roster as a list
+        date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        getShows(self.username, date, "*", "*", "*")
         print("Roster")
     def cancelShift(self, dato, movie_title, group):
         date = datetime.datetime.strptime(dato, "%Y-%m-%d %H:%M:%S")
@@ -26,23 +28,30 @@ class user:
             print("[+] You've succesfully canceled your shift on" + str(dato))
         else:
             print("[-] You've unsuccesfully canceled your shift, please try again.")
-    def listUpcommingShows(self, number):
+    def listUpcommingShows(self, dato):
+        today = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        date = datetime.datetime.strptime(dato, "%Y-%m-%d %H:%M:%S")
+        getShows(self.username, today, date, "*", "*")
         #Query to show a given number of upcomming shows
         #Maybe just output all shows, and then we can take the first X of the list to display
         print("Shows")
-    def listUnoccupiedShows(self, weeks):
-        #This one will be difficult?
-        print("Show unoccupied for " + weeks + "in advance")
+    def listUnoccupiedShows(self, dato):
+        print("[+] Shows unoccupied for " + weeks + "in advance")
+        today = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        date = datetime.datetime.strptime(dato, "%Y-%m-%d %H:%M:%S")
+        getShows("NULL", today, date, "*", "*")
     def logOut(self):
-        #Maybe clean the user?
-        print("Logging out..")
+        print("[+] Logging out..")
     def changePassword(self, newPass):
         #Query to change current users password column and change it to newPass
-        print("Changing password")
+        print("[+] Changing password")
+        changePassword(self.username, self.password, newPass)
         self.password = newPass
-    def fetchListForGivenShow(self, show):
-        #Maybe just iterate through the whole roster, looking for shows equal to "show"
+    def fetchListForGivenShow(self, movie):
         print("Show me da stuff")
+
+        getShows()
+        username, fromdate, todate, grp, movie
     def listOfGroups(self):
         #Ooof?
         print("Gief me da groups")

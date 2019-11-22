@@ -22,7 +22,7 @@ def main():
         print("You are logged in!")
     # create a user class with the given username
         userTable = getUser(username)  # [UUID, Username, Email, Permission, Score, Groups]
-        currentuser = user(username, password, userTable[2], userTable[3], userTable[4], userTable[5])
+        currentuser = user(username, password, userTable[2], userTable[3], userTable[4], getGroups(username))
         session = True
         while session:
             command = input("Enter a command and arguments").split()
@@ -36,7 +36,7 @@ def main():
                 currentuser.listUpcommingShows()
             elif command == "listUnoccupiedShows":
                 currentuser.listUnoccupiedShows()
-            elif command == "logOut":
+            elif command == "logOut" or "q":
                 currentuser.logOut()
                 session = False
             elif command == "changePassword":
