@@ -120,10 +120,14 @@ def cancelShift(username,date,grp,movie):
     UUID = getUUID(username)
     cursor = logindb.cursor()
     cursor.execute("DELETE FROM Roster WHERE Roster.UserID = '%s' AND Roster.Date = '%s' AND Roster.movie_title = '%s' AND Roster.grp = '%s' LIMIT 1" %(UUID,date,movie,grp))
+    if(cursor.rowcount < 1):
+        cursor.close()
+        return False
     logindb.commit()
     cursor.close()
+    return True
 
-def listShows(username, fromdate, todate, grp, movie):
+def getShows(username, fromdate, todate, grp, movie):
     if(username) == None:
         UUID = "*"
     else:
@@ -135,4 +139,4 @@ def listShows(username, fromdate, todate, grp, movie):
     return ret
 
 date = datetime.datetime(2019,11,21,21,0)
-addShift("Lasse",date,"None","Movie#1")
+cancelShift("Lasse",date,"None","Movie#1")
