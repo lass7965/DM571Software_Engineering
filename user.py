@@ -49,9 +49,6 @@ class user:
         self.password = newPass
     def fetchListForGivenShow(self, movie):
         print("Show me da stuff")
-
-        getShows()
-        username, fromdate, todate, grp, movie
     def listOfGroups(self):
         #Ooof?
         print("Gief me da groups")
