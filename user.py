@@ -1,5 +1,6 @@
 import datetime
 from mySQL import *
+from prettytable import PrettyTable
 class user:
     def __init__(self, uname, passw, mail, perm, scor, uniqueID, groups):
         self.username = uname
@@ -19,8 +20,11 @@ class user:
     def viewRoster(self): #Roster [Date, Movie_Title, Group, UserID]
         #Query to output the whole roster as a list
         date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        getShows(self.username, date, "*", "*", "*")
-        print("Roster")
+        shows = getShows(self.username, date, "*", "*", "*")
+        table = PrettyTable(["Date", "Movie Title", "Group", "User ID"])
+        for show in shows:
+            table.add_row(show)
+        print(table)
     def cancelShift(self, dato, movie_title, group):
         date = datetime.datetime.strptime(dato, "%Y-%m-%d %H:%M:%S")
         temp = cancelShift(self.username, date, group, movie_title)
