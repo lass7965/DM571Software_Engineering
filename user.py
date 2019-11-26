@@ -1,4 +1,6 @@
+import datetime
 from mySQL import *
+from prettytable import PrettyTable
 class user:
     def __init__(self, uname, passw, mail, perm, scor, uniqueID, groups):
         self.username = uname
@@ -6,36 +8,50 @@ class user:
         self.email = mail
         self.permissions = perm
         self.score = scor
-        self.UUID = uniqueID
         self.groups = groups
-    def takeShift(self, date, movie_title, group):
-        createShift(date, movie_title, group, self.UUID) #Needs to get implemented
-        #Query for creating a shift
-        #Maybe a query to check if the given date and time is occupied?
-        #Make a query request with the data inside of the userClass
-        print("taking shift on" + str(date))
+    def takeShift(self, dato, movie_title, group):
+        date = datetime.datetime.strptime(dato, "%Y-%m-%d %H:%M:%S")
+        for i in self.groups:
+            if i == group:
+                print("[+] Taking shift on" + str(dato))
+                addShift(self.username, date, group, movie_title)
+                break
+        print("[-] You've entered a wrong command. ")
     def viewRoster(self): #Roster [Date, Movie_Title, Group, UserID]
         #Query to output the whole roster as a list
-        print("Roster")
-    def cancelShift(self, date):
-        #Query to remove a shift from the DB given a date
-        print("Canceling shift at" + str(date))
-    def listUpcommingShows(self, number):
+        date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        shows = getShows(self.username, date, "*", "*", "*")
+        table = PrettyTable(["Date", "Movie Title", "Group", "User ID"])
+        for show in shows:
+            table.add_row(show)
+        print(table)
+    def cancelShift(self, dato, movie_title, group):
+        date = datetime.datetime.strptime(dato, "%Y-%m-%d %H:%M:%S")
+        temp = cancelShift(self.username, date, group, movie_title)
+        if temp == True:
+            print("[+] You've succesfully canceled your shift on" + str(dato))
+        else:
+            print("[-] You've unsuccesfully canceled your shift, please try again.")
+    def listUpcommingShows(self, dato):
+        today = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        date = datetime.datetime.strptime(dato, "%Y-%m-%d %H:%M:%S")
+        getShows(self.username, today, date, "*", "*")
         #Query to show a given number of upcomming shows
         #Maybe just output all shows, and then we can take the first X of the list to display
         print("Shows")
-    def listUnoccupiedShows(self, weeks):
-        #This one will be difficult?
-        print("Show unoccupied for " + weeks + "in advance")
+    def listUnoccupiedShows(self, dato):
+        print("[+] Shows unoccupied for " + weeks + "in advance")
+        today = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        date = datetime.datetime.strptime(dato, "%Y-%m-%d %H:%M:%S")
+        getShows("NULL", today, date, "*", "*")
     def logOut(self):
-        #Maybe clean the user?
-        print("Logging out..")
+        print("[+] Logging out..")
     def changePassword(self, newPass):
         #Query to change current users password column and change it to newPass
-        print("Changing password")
+        print("[+] Changing password")
+        changePassword(self.username, self.password, newPass)
         self.password = newPass
-    def fetchListForGivenShow(self, show):
-        #Maybe just iterate through the whole roster, looking for shows equal to "show"
+    def fetchListForGivenShow(self, movie):
         print("Show me da stuff")
     def listOfGroups(self):
         #Ooof?
