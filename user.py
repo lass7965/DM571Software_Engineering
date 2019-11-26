@@ -1,3 +1,4 @@
+from mySQL import *
 class user:
     def __init__(self, uname, passw, mail, perm, scor, uniqueID, groups):
         self.username = uname

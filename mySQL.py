@@ -84,11 +84,9 @@ def updateScore(username, score):
     logindb.commit()
     cursor.close()
 
-def updateGroup(username, group):
-    cursor = logindb.cursor()
-    cursor.execute("UPDATE User SET Groups = "+group+" WHERE User.Username = '%s'" % username)
-    logindb.commit()
-    cursor.close()
+#def getGroup(username):
+#def addGroup(username):
+#def removeGroup(username)
 
 def getUser(username):
     cursor = logindb.cursor()
@@ -128,15 +126,18 @@ def cancelShift(username,date,grp,movie):
     return True
 
 def getShows(username, fromdate, todate, grp, movie):
-    if(username) == None:
-        UUID = "*"
+    if(username == None):
+        UUID = None
+    elif(username == "NULL"):
+        UUID=username
     else:
         UUID = getUUID(username)
     cursor = logindb.cursor()
-    cursor.execute("SELECT * FROM Roster WHERE Roster.UserID = '%s' AND Roster.Date > '%s' AND Roster.Date < '%s' AND Roster.movie_title = '%s' AND Roster.grp = '%s'" % (UUID,fromdate,todate, movie, grp))
+    query = "SELECT * FROM Roster WHERE Roster.UserID = '%s' AND Roster.Date != NULL " % UUID #(fromdate,todate, movie, grp)
+    cursor.execute(query)
     ret = cursor.fetchall()
     cursor.close()
     return ret
 
 date = datetime.datetime(2019,11,21,21,0)
-cancelShift("Lasse",date,"None","Movie#1")
+getShows(None,"*","*","*","*")
