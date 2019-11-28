@@ -1,4 +1,3 @@
-from mySQL import *
 from user import *
 
 def listUsers():
@@ -10,10 +9,6 @@ def listUsers():
             string += " " + str(elem)
         print(string)
 
-
-datetime.datetime(2019, 11, 21, 22, 0)
-
-
 def main():
     username = input("Enter your username\n")
     password = input("Enter your password\n")
@@ -22,36 +17,36 @@ def main():
         print("You are logged in!")
     # create a user class with the given username
         userTable = getUser(username)  # [UUID, Username, Email, Permission, Score, Groups]
-        currentuser = user(username, password, userTable[2], userTable[3], userTable[4], getGroups(username))
+        currentuser = user(username, userTable[2], userTable[3], userTable[4], getGroup(username))
         session = True
         while session:
-            command = input("Enter a command and arguments").split()
-            if command == "takeShift":
-                currentuser.takeShift("2019-11-21 13:31:00")
-            elif command == "viewRoster":
-                currentuser.viewRoster()
-            elif command == "cancelShift":
-                currentuser.cancelShift("2019-11-21 13:31:00")
-            elif command == "listUpcommingShows":
+            command = input("Enter a command and arguments\n").split()
+            if command[0].lower() == "takeshift":
+                currentuser.takeShift(command[1:])
+            elif command[0].lower() == "viewroster":
+                currentuser.viewRoster(command[1:])
+            elif command[0].lower() == "cancelshift":
+                currentuser.cancelShift(command[1:])
+            elif command[0].lower() == "listupcommingshows":
                 currentuser.listUpcommingShows()
-            elif command == "listUnoccupiedShows":
+            elif command[0].lower() == "listunoccupiedshows":
                 currentuser.listUnoccupiedShows()
-            elif command == "logOut" or "q":
+            elif command[0].lower() == "logout" or "q":
                 currentuser.logOut()
                 session = False
-            elif command == "changePassword":
+            elif command[0].lower() == "changepassword":
                 currentuser.changePassword("xXxXxX")
-            elif command == "listUsers":
+            elif command[0].lower() == "listusers":
                 listUsers()
-            elif command == "fetchListForGivenShow":
+            elif command[0].lower() == "fetchlistforgivenshow":
                 currentuser.fetchListForGivenShow()
-            elif command == "listGroups":
+            elif command[0].lower() == "listgroups":
                 currentuser.listGroups()
-            elif command == "createGroup":
+            elif command[0].lower() == "creategroup":
                 currentuser.createGroup()
-            elif command == "addUserToGroup":
+            elif command[0].lower() == "addusertogroup":
                 currentuser.addUserToGroup()
-            elif command == "listMembersOfGroup":
+            elif command[0].lower() == "listmembersofgroup":
                 currentuser.listMembersOfGroup()
 
 # Create a switch in python, calling one of the class functions inside user.py

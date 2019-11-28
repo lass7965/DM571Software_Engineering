@@ -1,26 +1,33 @@
 import datetime
 from mySQL import *
 from prettytable import PrettyTable
+from termcolor import colored
 class user:
-    def __init__(self, uname, passw, mail, perm, scor, uniqueID, groups):
+    def __init__(self, uname, mail, perm, scor, groups):
         self.username = uname
-        self.password = passw
         self.email = mail
         self.permissions = perm
         self.score = scor
         self.groups = groups
-    def takeShift(self, dato, movie_title, group):
-        date = datetime.datetime.strptime(dato, "%Y-%m-%d %H:%M:%S")
+    def takeShift(self, args): #dateString, movie, group
+        if(len(args) != 4):
+            print(colored("You have entered the wrong arguments!", "red"))
+            print(colored("Format is:\ntakeShift %date %movie %group ", "red"),colored("Example: takeshift 2019-11-25 08:00 Jumanji Salesperson", "white"))
+            return False
+        date = datetime.datetime.strptime(args[0]+" "+args[1], "%Y-%m-%d %H:%M")
+        movie = args[2]
+        group = args[3]
         for i in self.groups:
-            if i == group:
-                print("[+] Taking shift on" + str(dato))
-                addShift(self.username, date, group, movie_title)
+            if i[0] == group:
+                ret = addShift(self.username, date, group, movie)
+                if(ret == True):
+                    print(colored("Successfully added shift!", "green"))
+                    break
+                print(colored("Failed to add shift, please try again!","red"))
                 break
-        print("[-] You've entered a wrong command. ")
-    def viewRoster(self): #Roster [Date, Movie_Title, Group, UserID]
-        #Query to output the whole roster as a list
+    def viewRoster(self, args): #Roster [Date, Movie_Title, Group, UserID]
         date = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        shows = getShows(self.username, date, "*", "*", "*")
+        shows = getShowsForUser(self.username)
         table = PrettyTable(["Date", "Movie Title", "Group", "User ID"])
         for show in shows:
             table.add_row(show)
