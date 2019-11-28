@@ -28,26 +28,26 @@ def main():
             elif command[0].lower() == "cancelshift":
                 currentuser.cancelShift(command[1:])
             elif command[0].lower() == "listupcommingshows":
-                currentuser.listUpcommingShows()
+                currentuser.listUpcommingShows(command[1:])
             elif command[0].lower() == "listunoccupiedshows":
-                currentuser.listUnoccupiedShows()
-            elif command[0].lower() == "logout" or "q":
-                currentuser.logOut()
-                session = False
+                currentuser.listUnoccupiedShows(command[1:])
             elif command[0].lower() == "changepassword":
-                currentuser.changePassword("xXxXxX")
+                currentuser.changePassword(command[1:])
             elif command[0].lower() == "listusers":
                 listUsers()
             elif command[0].lower() == "fetchlistforgivenshow":
-                currentuser.fetchListForGivenShow()
+                currentuser.fetchListForGivenShow(command[1:])
             elif command[0].lower() == "listgroups":
-                currentuser.listGroups()
+                currentuser.listGroups(command[1:])
             elif command[0].lower() == "creategroup":
-                currentuser.createGroup()
+                currentuser.createGroup(command[1:])
             elif command[0].lower() == "addusertogroup":
-                currentuser.addUserToGroup()
+                currentuser.addUserToGroup(command[1:])
             elif command[0].lower() == "listmembersofgroup":
-                currentuser.listMembersOfGroup()
+                currentuser.listMembersOfGroup(command[1:])
+            elif command[0].lower() == "logout" or "q":
+                currentuser.logOut()
+                session = False
 
 # Create a switch in python, calling one of the class functions inside user.py
 # Perhaps using a dict

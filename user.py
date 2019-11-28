@@ -62,7 +62,7 @@ class user:
         for show in shows:
             table.add_row(show)
         print(table)
-        print("Shows")
+
     def listUnoccupiedShows(self, args): #dato, dato
         if (len(args) != 2):
             print(colored("[-] You have entered the wrong arguments!", "red"))
@@ -74,7 +74,7 @@ class user:
         shows = getShowsFromDate(today, date)
         temp = []
         for show in shows:
-            if(show[3] == "None"):
+            if(show[3] == None):
                 temp.append(show)
         table = PrettyTable(["Date", "Movie Title", "Group", "User ID"])
         for show in temp:
@@ -84,21 +84,44 @@ class user:
     def logOut(self):
         print("[+] Logging out..")
     def changePassword(self, args):
+        if (len(args) != 1):
+            print(colored("[-] You have entered the wrong arguments!", "red"))
+            print(colored("[-] Format is:\ntakeShift %date %movie %group ", "red"),
+                  colored("Example: takeshift 2019-11-25 08:00 Jumanji Salesperson", "white"))#######Har ikke lavet et eksempel endnu
+            return False
         #Query to change current users password column and change it to newPass
         print("[+] Changing password")
         changePassword(self.username, self.password, args[0])
         self.password = args[0]
-    def fetchListForGivenShow(self, movie):
-        print("Show me da stuff")
+    def fetchListForGivenShow(self, args): #movie
+        if (len(args) != 1):
+            print(colored("[-] You have entered the wrong arguments!", "red"))
+            print(colored("[-] Format is:\ntakeShift %date %movie %group ", "red"),
+                  colored("Example: takeshift 2019-11-25 08:00 Jumanji Salesperson", "white"))#######Har ikke lavet et eksempel endnu
+            return False
+        shows = getShowsFromTitle(args[0])
+        table = PrettyTable(["Date", "Movie Title", "Group", "User ID"])
+        for show in shows:
+            table.add_row(show)
+        print(table)
     def listOfGroups(self):
-        #Ooof?
-        print("Gief me da groups")
-    def createGroup(self):
-        #Oooof?
-        print("Creating group..")
-    def addUserToGroup(self, group):
-        #Perhaps we should have a group column as well associated to each user?
-        print("Add me to this group pls")
+        print("hello")
+    def createGroup(self, args): #Not implemented #new group as arg
+        if (len(args) != 1):
+            print(colored("[-] You have entered the wrong arguments!", "red"))
+            print(colored("[-] Format is:\ntakeShift %date %movie %group ", "red"),
+                  colored("Example: takeshift 2019-11-25 08:00 Jumanji Salesperson", "white"))#######Har ikke lavet et eksempel endnu
+            return False
+        print("[+]You've succesfully added " + str(args[0]) + " as a group")
+    def addUserToGroup(self, args): #Name of group
+        if (len(args) != 1):
+            print(colored("[-] You have entered the wrong arguments!", "red"))
+            print(colored("[-] Format is:\ntakeShift %date %movie %group ", "red"),
+                  colored("Example: takeshift 2019-11-25 08:00 Jumanji Salesperson",
+                          "white"))  #######Har ikke lavet et eksempel endnu
+            return False
+        addGroup(self.groups, args[0])  # Troede addGroup tilføjede en gruppe
+        print("[+]You've succesfully added yourself to the group " + str(args[0]))
     def listMembersOfGroup(self):
         #Guess this one and the 2 others with "ooof" could be easier with the DB implementation you showed me
         print("Who is a member of this group?")

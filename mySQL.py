@@ -122,7 +122,7 @@ def removeGroup(username, grp):
     return ret
 
 ########## Roster database ##########
-def getShowFromTitle(movie):
+def getShowsFromTitle(movie):
     cursor = logindb.cursor()
     query = "SELECT * FROM Roster WHERE Roster.Movie_Title = '%s';" %movie
     cursor.execute(query)
