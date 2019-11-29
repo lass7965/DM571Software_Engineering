@@ -1,5 +1,6 @@
 import mysql.connector
 import datetime
+import bytestring
 
 try:
     logindb = mysql.connector.connect(
@@ -101,18 +102,53 @@ def getGroup(username):
     cursor = logindb.cursor()
     cursor.execute("SELECT Groups.Grp FROM Groups WHERE Groups.UserID = '%s'" %UUID)
     ret = cursor.fetchall()
+    for i in range(len(ret)):
+        ret[i] = ret[i][0]
     cursor.close()
     return ret
+
+def listGroups():
+    cursor = logindb.cursor()
+    cursor.execute("SELECT Groups.Grp FROM Groups WHERE Groups.UserID IS NULL")
+    ret = cursor.fetchall()
+    cursor.close()
+    for i in range(len(ret)):
+        ret[i] = ret[i][0]
+    return ret
+
+def listMemberOfGroup(grp):
+    cursor = logindb.cursor()
+    try:
+        cursor.execute("SELECT Username FROM (SELECT * FROM Groups WHERE Groups.grp = '%s') AS t1 INNER JOIN User t2 ON t1.UserID = t2.UserID" % grp)
+        ret = cursor.fetchall()
+        for i in range(len(ret)):
+            ret[i] = ret[i][0]
+        cursor.close()
+        return ret
+    except:
+        return "None"
 
 def addGroup(username, grp):
     UUID = getUUID(username)
     cursor = logindb.cursor()
+    cursor.execute("SELECT * FROM Groups WHERE Groups.UserID IS NULL AND Groups.grp = '%s'" % grp)
+    cursor.fetchmany()
+    if cursor.rowcount <= 0:
+        cursor.close()
+        return False
     cursor.execute("INSERT INTO Groups VALUES('%s','%s')" %(UUID,grp))
-    ret = cursor.fetchmany()
     logindb.commit()
     cursor.close()
-    return ret
-def removeGroup(username, grp):
+    return True
+
+def createGroup(group):
+    cursor = logindb.cursor()
+    cursor.execute("INSERT INTO Groups VALUES(NULL,'%s')" %group)
+    logindb.commit()
+    cursor.close()
+    return True
+
+def removeUserFromGroup(username, grp):
     UUID = getUUID(username)
     cursor = logindb.cursor()
     cursor.execute("DELETE FROM Groups WHERE Groups.UserID = '%s' AND Groups.Grp = '%s'" %(UUID,grp))
@@ -121,10 +157,20 @@ def removeGroup(username, grp):
     cursor.close()
     return ret
 
+def deleteGroup(grp):
+    cursor = logindb.cursor()
+    cursor.execute("DELETE FROM Groups WHERE Groups.Grp = '%s'" %grp)
+    if(cursor.rowcount == 0):
+        cursor.close()
+        return False
+    logindb.commit()
+    cursor.close()
+    return True
+
 ########## Roster database ##########
 def getShowsFromTitle(movie):
     cursor = logindb.cursor()
-    query = "SELECT * FROM Roster WHERE Roster.Movie_Title = '%s';" %movie
+    query = "SELECT t1.date, t1.movie_title, t1.grp, Username FROM (SELECT * FROM Roster WHERE Roster.Movie_Title = '%s') AS t1 INNER JOIN User t2 ON t1.UserID = t2.UserID;" %movie
     cursor.execute(query)
     ret = cursor.fetchall()
     cursor.close()
@@ -132,7 +178,7 @@ def getShowsFromTitle(movie):
 
 def getShowsFromDate(fromdate):
     cursor = logindb.cursor()
-    query = "SELECT * FROM Roster WHERE Roster.Date = '%s'" % fromdate
+    query = "SELECT t1.date, t1.movie_title, t1.grp, Username FROM (SELECT * FROM Roster WHERE Roster.Date = '%s') AS t1 INNER JOIN User t2 ON t1.UserID = t2.UserID" % fromdate
     cursor.execute(query)
     ret = cursor.fetchall()
     cursor.close()
@@ -140,7 +186,7 @@ def getShowsFromDate(fromdate):
 
 def getShowsFromDate(fromdate, todate):
     cursor = logindb.cursor()
-    query = "SELECT * FROM Roster WHERE Roster.Date >= '%s' AND Roster.Date < '%s'" %(fromdate, todate)
+    query = "SELECT t1.date, t1.movie_title, t1.grp, Username FROM (SELECT * FROM Roster WHERE Roster.Date >= '%s' AND Roster.Date < '%s') AS t1 INNER JOIN User t2 ON t1.UserID = t2.UserID" %(fromdate, todate)
     cursor.execute(query)
     ret = cursor.fetchall()
     cursor.close()
@@ -149,7 +195,7 @@ def getShowsFromDate(fromdate, todate):
 def getShowsForUser(username):
     UUID = getUUID(username)
     cursor = logindb.cursor()
-    query = "SELECT t1.Date, t1.Movie_Title, t1.Grp, Username FROM Roster AS t1 INNER JOIN User t2 ON t1.UserID = t2.UserID"
+    query = "SELECT t1.Date, t1.Movie_Title, t1.Grp, Username FROM (SELECT * FROM Roster WHERE Roster.UserID = '%s') AS t1 INNER JOIN User t2 ON t1.UserID = t2.UserID" % UUID
     cursor.execute(query)
     ret = cursor.fetchall()
     cursor.close()

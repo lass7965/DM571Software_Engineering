@@ -27,10 +27,10 @@ def main():
                 currentuser.viewRoster(command[1:])
             elif command[0].lower() == "cancelshift":
                 currentuser.cancelShift(command[1:])
-            elif command[0].lower() == "listupcommingshows":
+            elif command[0].lower() == "listupcomingshows":
                 currentuser.listUpcommingShows(command[1:])
             elif command[0].lower() == "listunoccupiedshows":
-                currentuser.listUnoccupiedShows(command[1:])
+                currentuser.listUnoccupiedShows()
             elif command[0].lower() == "changepassword":
                 currentuser.changePassword(command[1:])
             elif command[0].lower() == "listusers":
@@ -38,17 +38,25 @@ def main():
             elif command[0].lower() == "fetchlistforgivenshow":
                 currentuser.fetchListForGivenShow(command[1:])
             elif command[0].lower() == "listgroups":
-                currentuser.listGroups(command[1:])
+                currentuser.listOfGroups()
             elif command[0].lower() == "creategroup":
                 currentuser.createGroup(command[1:])
-            elif command[0].lower() == "addusertogroup":
-                currentuser.addUserToGroup(command[1:])
+            elif command[0].lower() == "deletegroup":
+                currentuser.deleteGroup(command[1:])
+            elif command[0].lower() == "addgroup":
+                currentuser.addGroup(command[1:])
+            elif command[0].lower() == "removegroup":
+                currentuser.removeGroup(command[1:])
             elif command[0].lower() == "listmembersofgroup":
                 currentuser.listMembersOfGroup(command[1:])
-            elif command[0].lower() == "logout" or "q":
+            elif command[0].lower() == "logout" or command[0].lower() ==  "q":
                 currentuser.logOut()
                 session = False
-
+            elif command[0].lower() == 'help' or command[0].lower() == "?":
+                print("Can't help you! You are on your own!")
+                continue ####Help message not implemented, should list all usercommands and usage
+            else:
+                print(colored("Unknown command. Type 'help' if you need a list of commands"))
 # Create a switch in python, calling one of the class functions inside user.py
 # Perhaps using a dict
 # When logging out, session = False
