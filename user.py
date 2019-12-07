@@ -86,8 +86,8 @@ class user:
     def logOut(self):
         print(colored("[+] Logging out.."),"green")
 
-    def changePassword(self, args):
-        if (len(args) != 2):
+    def changePassword(self, args): #Har ikke testet denne her
+        if (len(args) != 1):
             print(colored("[-] You have entered the wrong arguments!", "red"))
             print(colored("Format is:\nchangePassowrd [oldPassword] [newPassword]", "red"),
                   colored("Example: changePassword qwerty helloworld", "white"))
@@ -101,8 +101,7 @@ class user:
     def fetchListForGivenShow(self, args): #movie
         if (len(args) != 1):
             print(colored("[-] You have entered the wrong arguments!", "red"))
-            print(colored("Format is:\ntakeShift %date %movie %group ", "red"),
-                  colored("Example: takeshift 2019-11-25 08:00 Jumanji Salesperson", "white"))#######No example made yet
+            print(colored("Format is:\ntakeShift %date %movie %group ", "red"),colored("Example: fetchlistforgivenshow Jumanji", "white")) #Format not done yet
             return False
         shows = getShowsFromTitle(args[0])
         table = PrettyTable(["Date", "Movie Title", "Group", "User ID"])
@@ -113,11 +112,10 @@ class user:
     def listOfGroups(self):
         print(colored(listGroups(), "yellow"))
 
-    def createGroup(self, args): #Not implemented #new group as arg
+    def createGroup(self, args): #new group as arg
         if (len(args) != 1):
             print(colored("[-] You have entered the wrong arguments!", "red"))
-            print(colored("Format is:\ntakeShift %date %movie %group ", "red"),
-                  colored("Example: takeshift 2019-11-25 08:00 Jumanji Salesperson", "white"))#######No example made yet
+            print(colored("Format is:\ntakeShift %date %movie %group ", "red"),colored("Example: creategroup cleaner", "white"))
             return
         if createGroup(args[0]) == False:
             print(colored("[-] Failed to add " + args[0] + " as a group","red"))
@@ -127,9 +125,7 @@ class user:
     def addGroup(self, args): #Name of group
         if (len(args) != 1):
             print(colored("[-] You have entered the wrong arguments!", "red"))
-            print(colored("Format is:\ntakeShift %date %movie %group ", "red"),
-                  colored("Example: takeshift 2019-11-25 08:00 Jumanji Salesperson",
-                          "white"))  #######Har ikke lavet et eksempel endnu
+            print(colored("Format is:\ntakeShift %date %movie %group ", "red"),colored("Example: addgroup Salesman","white"))
             return False
         if addGroup(self.username, args[0]) == False:
             print(colored("[-] Failed to add you to the group " + args[0] +"!", "red"))
