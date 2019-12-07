@@ -1,28 +1,27 @@
 import mysql.connector
 import datetime
-import bytestring
 
 try:
-    logindb = mysql.connector.connect(
+    database = mysql.connector.connect(
         host = "mysql23.unoeuro.com",
         user = "lkis_dk",
         passwd = "DM571Software",
         database="lkis_dk_db"
     )
 except:
-    print("Connection to the mySQL failed!")
+    raise Exception("Connection to the mySQL failed!")
 
 
 ########## Main Functions ##########
 def getUserTable():
-    cursor = logindb.cursor()
+    cursor = database.cursor()
     cursor.execute("SELECT * FROM User")
     ret = cursor.fetchall()
     cursor.close()
     return ret
 
 def getUUID(username):
-    cursor = logindb.cursor()
+    cursor = database.cursor()
     cursor.execute("SELECT User.UserID FROM User WHERE User.Username = '%s';" % username)
     try:
         ret = cursor.fetchone()[0].decode()
@@ -32,7 +31,7 @@ def getUUID(username):
     return ret
 
 def createUser(username, password, email, permission):
-    cursor = logindb.cursor()
+    cursor = database.cursor()
     try:
         today = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         query = "INSERT INTO User (UserID, Username, Email, Permission) VALUES(UUID(), '%s','%s',%d);" %(username, email, permission)
@@ -40,18 +39,18 @@ def createUser(username, password, email, permission):
         UUID = getUUID(username)
         query = "INSERT INTO Login VALUES('%s','%s','%s','%s');" % (UUID, password, today, today)
         cursor.execute(query)
-        logindb.commit()
+        database.commit()
         cursor.close()
     except:
         print("User or email is already used")
         cursor.close()
 
-########## Login Database ##########
+########## Login table ##########
 def checkPasswd(username,passwd):
     UUID = getUUID(username)
     if(UUID == False):
         return False
-    cursor = logindb.cursor()
+    cursor = database.cursor()
     cursor.execute("SELECT t1.UserID FROM Login AS t1 WHERE t1.UserID = '%s' AND t1.Password = '%s';" % (UUID, passwd))
     try:
         cursor.fetchone()[0] #This command fails if user and password does not match.
@@ -65,41 +64,41 @@ def changePassword(username, oldpasswd, newpasswd):
     UUID = getUUID(username)
     if(UUID == False):
         return False
-    cursor = logindb.cursor()
+    cursor = database.cursor()
     cursor.execute("UPDATE Login SET Password = '%s' WHERE Login.UserID = '%s' AND Login.Password = '%s'" % (newpasswd,UUID,oldpasswd))
     if(cursor.rowcount != 1):
         return False
-    logindb.commit()
+    database.commit()
     cursor.close()
     return True
 
 def updateLastLogin(username):
     UUID = getUUID(username)
-    cursor = logindb.cursor()
+    cursor = database.cursor()
     today = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     cursor.execute("UPDATE Login SET Last_Login = '"+today+"' WHERE Login.UserID = '%s'" % UUID)
-    logindb.commit()
+    database.commit()
     cursor.close()
 
 ########## User database ##########
 def getUser(username):
-    cursor = logindb.cursor()
+    cursor = database.cursor()
     cursor.execute("SELECT * FROM User WHERE User.Username = '%s';" % username)
     ret = cursor.fetchone()[0]
     cursor.close()
     return ret
 
 def updateScore(username, score):
-    cursor = logindb.cursor()
+    cursor = database.cursor()
     cursor.execute("UPDATE User SET Score = "+str(score)+" WHERE User.Username = '%s'" % username)
-    logindb.commit()
+    database.commit()
     cursor.close()
 
 
-########## Group database ##########
+########## Group table ##########
 def getGroup(username):
     UUID = getUUID(username)
-    cursor = logindb.cursor()
+    cursor = database.cursor()
     cursor.execute("SELECT Groups.Grp FROM Groups WHERE Groups.UserID = '%s'" %UUID)
     ret = cursor.fetchall()
     for i in range(len(ret)):
@@ -108,7 +107,7 @@ def getGroup(username):
     return ret
 
 def listGroups():
-    cursor = logindb.cursor()
+    cursor = database.cursor()
     cursor.execute("SELECT Groups.Grp FROM Groups WHERE Groups.UserID IS NULL")
     ret = cursor.fetchall()
     cursor.close()
@@ -117,7 +116,7 @@ def listGroups():
     return ret
 
 def listMemberOfGroup(grp):
-    cursor = logindb.cursor()
+    cursor = database.cursor()
     try:
         cursor.execute("SELECT Username FROM (SELECT * FROM Groups WHERE Groups.grp = '%s') AS t1 INNER JOIN User t2 ON t1.UserID = t2.UserID" % grp)
         ret = cursor.fetchall()
@@ -130,46 +129,46 @@ def listMemberOfGroup(grp):
 
 def addGroup(username, grp):
     UUID = getUUID(username)
-    cursor = logindb.cursor()
+    cursor = database.cursor()
     cursor.execute("SELECT * FROM Groups WHERE Groups.UserID IS NULL AND Groups.grp = '%s'" % grp)
     cursor.fetchmany()
     if cursor.rowcount <= 0:
         cursor.close()
         return False
     cursor.execute("INSERT INTO Groups VALUES('%s','%s')" %(UUID,grp))
-    logindb.commit()
+    database.commit()
     cursor.close()
     return True
 
 def createGroup(group):
-    cursor = logindb.cursor()
+    cursor = database.cursor()
     cursor.execute("INSERT INTO Groups VALUES(NULL,'%s')" %group)
-    logindb.commit()
+    database.commit()
     cursor.close()
     return True
 
 def removeUserFromGroup(username, grp):
     UUID = getUUID(username)
-    cursor = logindb.cursor()
+    cursor = database.cursor()
     cursor.execute("DELETE FROM Groups WHERE Groups.UserID = '%s' AND Groups.Grp = '%s'" %(UUID,grp))
     ret = cursor.fetchmany()
-    logindb.commit()
+    database.commit()
     cursor.close()
     return ret
 
 def deleteGroup(grp):
-    cursor = logindb.cursor()
+    cursor = database.cursor()
     cursor.execute("DELETE FROM Groups WHERE Groups.Grp = '%s'" %grp)
     if(cursor.rowcount == 0):
         cursor.close()
         return False
-    logindb.commit()
+    database.commit()
     cursor.close()
     return True
 
-########## Roster database ##########
+########## Roster table ##########
 def getShowsFromTitle(movie):
-    cursor = logindb.cursor()
+    cursor = database.cursor()
     query = "SELECT t1.date, t1.movie_title, t1.grp, Username FROM (SELECT * FROM Roster WHERE Roster.Movie_Title = '%s') AS t1 INNER JOIN User t2 ON t1.UserID = t2.UserID;" %movie
     cursor.execute(query)
     ret = cursor.fetchall()
@@ -177,7 +176,7 @@ def getShowsFromTitle(movie):
     return ret
 
 def getShowsFromDate(fromdate):
-    cursor = logindb.cursor()
+    cursor = database.cursor()
     query = "SELECT t1.date, t1.movie_title, t1.grp, Username FROM (SELECT * FROM Roster WHERE Roster.Date = '%s') AS t1 INNER JOIN User t2 ON t1.UserID = t2.UserID" % fromdate
     cursor.execute(query)
     ret = cursor.fetchall()
@@ -185,7 +184,7 @@ def getShowsFromDate(fromdate):
     return ret
 
 def getShowsFromDate(fromdate, todate):
-    cursor = logindb.cursor()
+    cursor = database.cursor()
     query = "SELECT t1.date, t1.movie_title, t1.grp, Username FROM (SELECT * FROM Roster WHERE Roster.Date >= '%s' AND Roster.Date < '%s') AS t1 INNER JOIN User t2 ON t1.UserID = t2.UserID" %(fromdate, todate)
     cursor.execute(query)
     ret = cursor.fetchall()
@@ -194,7 +193,7 @@ def getShowsFromDate(fromdate, todate):
 
 def getShowsForUser(username):
     UUID = getUUID(username)
-    cursor = logindb.cursor()
+    cursor = database.cursor()
     query = "SELECT t1.Date, t1.Movie_Title, t1.Grp, Username FROM (SELECT * FROM Roster WHERE Roster.UserID = '%s') AS t1 INNER JOIN User t2 ON t1.UserID = t2.UserID" % UUID
     cursor.execute(query)
     ret = cursor.fetchall()
@@ -202,7 +201,7 @@ def getShowsForUser(username):
     return ret
 
 def getShowsForGroup(group):
-    cursor = logindb.cursor()
+    cursor = database.cursor()
     query = "SELECT * FROM Roster WHERE Roster.Grp = '%s'" % group
     cursor.execute(query)
     ret = cursor.fetchall()
@@ -211,30 +210,30 @@ def getShowsForGroup(group):
 
 def addShift(username,date,grp, movie):
     UUID = getUUID(username)
-    cursor = logindb.cursor()
+    cursor = database.cursor()
     query = "UPDATE Roster SET UserID = '%s' WHERE Roster.Date = '%s' AND Roster.UserID IS NULL AND Roster.movie_title = '%s' AND Roster.grp = '%s' LIMIT 1" % (UUID,date,movie,grp)
     cursor.execute(query)
     cursor.fetchmany()
     if(cursor.rowcount<1):
         query = "INSERT INTO Roster VALUES('%s','%s','%s' ,'%s');" %(date,movie,grp,UUID)
         cursor.execute(query)
-    logindb.commit()
+    database.commit()
     cursor.close()
     return True
 
 def addMovie(date,grp,movie):
-    cursor = logindb.cursor()
+    cursor = database.cursor()
     cursor.execute("INSERT INTO Roster VALUES('%s','%s','%s',NULL)"%(date,movie,grp))
-    logindb.commit()
+    database.commit()
     cursor.close()
 
 def cancelShift(username,date,grp,movie):
     UUID = getUUID(username)
-    cursor = logindb.cursor()
+    cursor = database.cursor()
     cursor.execute("DELETE FROM Roster WHERE Roster.UserID = '%s' AND Roster.Date = '%s' AND Roster.movie_title = '%s' AND Roster.grp = '%s' LIMIT 1" %(UUID,date,movie,grp))
     if(cursor.rowcount < 1):
         cursor.close()
         return False
-    logindb.commit()
+    database.commit()
     cursor.close()
     return True
