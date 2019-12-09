@@ -1,13 +1,18 @@
 from user import *
 
-def listUsers():
-    userTable = getUserTable()
-    for user in userTable:
-        UUID = user[0].decode()
-        string = UUID
-        for elem in user[1:]:
-            string += " " + str(elem)
-        print(string)
+def printHelp():
+    print(colored("listUsers ","white",attrs=["bold"]),colored("\nLists all the registered users of the application","white"),colored("\nExample: listUsers\n","grey"))
+    print(colored("takeShift [YYYY-MM-dd] [hh:mm] [movie] [group]", "white", attrs=["bold"]),
+          colored("\nEnlist a shift", "white"),
+          colored("\nExample: takeshift 2019-11-25 08:00 Jumanji Salesperson\n", "grey"))
+    print(colored("viewRoster", "white", attrs=["bold"]),
+          colored("\nView all shifts for the groups you have assigned youself to\n", "white"))
+    print(colored("listUpcomingShows [YYYY-MM-dd] [hh:mm]", "white", attrs=["bold"]),
+          colored("\nList all shows scheduled to be run from today until a given date", "white"),
+          colored("\nExample: listUpcomingShows 2019-11-25 08:00\n", "grey"))
+
+
+
 
 def main():
     username = input("Enter your username\n")
@@ -24,7 +29,7 @@ def main():
             if command[0].lower() == "takeshift":
                 currentuser.takeShift(command[1:])
             elif command[0].lower() == "viewroster":
-                currentuser.viewRoster(command[1:])
+                currentuser.viewRoster()
             elif command[0].lower() == "cancelshift":
                 currentuser.cancelShift(command[1:])
             elif command[0].lower() == "listupcomingshows":
@@ -35,8 +40,8 @@ def main():
                 currentuser.changePassword(command[1:])
             elif command[0].lower() == "listusers":
                 listUsers()
-            elif command[0].lower() == "fetchlistforgivenshow":
-                currentuser.fetchListForGivenShow(command[1:])
+            elif command[0].lower() == "listforshow":
+                currentuser.listForShow(command[1:])
             elif command[0].lower() == "listgroups":
                 currentuser.listOfGroups()
             elif command[0].lower() == "creategroup":
@@ -53,13 +58,9 @@ def main():
                 currentuser.logOut()
                 session = False
             elif command[0].lower() == 'help' or command[0].lower() == "?":
-                print("Can't help you! You are on your own!")
-                continue ####Help message not implemented, should list all usercommands and usage
+                printHelp()
             else:
                 print(colored("Unknown command. Type 'help' if you need a list of commands"))
-# Create a switch in python, calling one of the class functions inside user.py
-# Perhaps using a dict
-# When logging out, session = False
     else:
         print("You've entered invalid credentials, login unsuccesfull.")
         return

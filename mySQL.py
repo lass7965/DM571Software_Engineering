@@ -12,7 +12,7 @@ except:
     raise Exception("Connection to the mySQL failed!")
 
 
-########## Main Functions ##########
+########## User table ##########
 def getUserTable():
     cursor = database.cursor()
     cursor.execute("SELECT * FROM User")

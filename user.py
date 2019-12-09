@@ -28,20 +28,16 @@ class user:
                     print(colored("[-] Failed to add shift, please try again!","red"))
                     return False
 
-    def viewRoster(self, args): #Roster [Date, Movie_Title, Group, UserID]
-        if (len(args) != 0):
-            print(colored("[-] You have entered too many arguments!", "red"))
-            print(colored("Format is:\nviewroster", "red"),
-                  colored("Example: viewRoster", "white")) #Not sure if we should have an example here
-            return False
-        try:
-            shows = getShowsForUser(self.username) #Should this not be getShowsForGroup (We have to discuss this)
-        except:
-            print(colored("[-] Failed to get roster for user: " + self.username,"red"))
-            return False
+    def viewRoster(self): #Roster [Date, Movie_Title, Group, UserID]
         table = PrettyTable(["Date", "Movie Title", "Group", "User ID"])
-        for show in shows:
-            table.add_row(show)
+        for group in self.groups:
+            try:
+                shows = getShowsForGroup(group)
+            except:
+                print(colored("[-] Failed to get roster for user: " + self.username,"red"))
+                return False
+            for show in shows:
+                table.add_row(show)
         print(table)
 
     def cancelShift(self, args): #dato, dato, movie_title, group
@@ -81,13 +77,13 @@ class user:
         table = PrettyTable(["Date", "Movie Title", "Group", "User ID"])
         for show in shows:
             table.add_row(show)
-        print(table)
+        print(colored(table,"yellow"))
 
     def logOut(self):
         print(colored("[+] Logging out.."),"green")
 
-    def changePassword(self, args): #Har ikke testet denne her
-        if (len(args) != 1):
+    def changePassword(self, args):
+        if (len(args) != 2):
             print(colored("[-] You have entered the wrong arguments!", "red"))
             print(colored("Format is:\nchangePassowrd [oldPassword] [newPassword]", "red"),
                   colored("Example: changePassword qwerty helloworld", "white"))
@@ -96,18 +92,18 @@ class user:
         if ret == False:
             print(colored("[-] Wrong old password entered!", "red"))
             return
-        print(colored("[+] Password changed!", "green")) ##I have made examples and added try/except around mysql from the start to this function
+        print(colored("[+] Password changed!", "green"))
 
-    def fetchListForGivenShow(self, args): #movie
+    def listForShow(self, args): #movie
         if (len(args) != 1):
             print(colored("[-] You have entered the wrong arguments!", "red"))
-            print(colored("Format is:\ntakeShift %date %movie %group ", "red"),colored("Example: fetchlistforgivenshow Jumanji", "white")) #Format not done yet
+            print(colored("Format is:\nlistForShow [movie]", "red"),colored("Example: listForShow Jumanji", "white"))
             return False
         shows = getShowsFromTitle(args[0])
         table = PrettyTable(["Date", "Movie Title", "Group", "User ID"])
         for show in shows:
             table.add_row(show)
-        print(table)
+        print(colored(table,"yellow"))
 
     def listOfGroups(self):
         print(colored(listGroups(), "yellow"))
@@ -115,17 +111,17 @@ class user:
     def createGroup(self, args): #new group as arg
         if (len(args) != 1):
             print(colored("[-] You have entered the wrong arguments!", "red"))
-            print(colored("Format is:\ntakeShift %date %movie %group ", "red"),colored("Example: creategroup cleaner", "white"))
+            print(colored("Format is:\ncreategroup [group] ", "red"),colored("Example: creategroup cleaner", "white"))
             return
         if createGroup(args[0]) == False:
             print(colored("[-] Failed to add " + args[0] + " as a group","red"))
             return
         print(colored("[+]You've succesfully added " + str(args[0]) + " as a group","green"))
 
-    def addGroup(self, args): #Name of group
+    def addGroup(self, args): #group
         if (len(args) != 1):
             print(colored("[-] You have entered the wrong arguments!", "red"))
-            print(colored("Format is:\ntakeShift %date %movie %group ", "red"),colored("Example: addgroup Salesman","white"))
+            print(colored("Format is:\naddGroup [group] ", "red"),colored("Example: addgroup Salesman","white"))
             return False
         if addGroup(self.username, args[0]) == False:
             print(colored("[-] Failed to add you to the group " + args[0] +"!", "red"))
@@ -134,10 +130,14 @@ class user:
         return True
 
     def listMembersOfGroup(self,args):
-        print(listMemberOfGroup(args[0]))
+        print(colored(listMemberOfGroup(args[0]),"yellow"))
         return True
 
     def removeGroup(self, args):
+        if (len(args) != 1):
+            print(colored("[-] You have entered the wrong arguments!", "red"))
+            print(colored("Format is:\nremoveGroup [group] ", "red"),colored("Example: removeGroup Salesman","white"))
+            return False
         if removeUserFromGroup(self.username, args[0]) == False:
             print(colored("[-] Failed to remove you from the group " + args[0] + "!", "red"))
             return True
@@ -145,8 +145,21 @@ class user:
         return False
 
     def deleteGroup(self, args):
+        if (len(args) != 1):
+            print(colored("[-] You have entered the wrong arguments!", "red"))
+            print(colored("Format is:\ndeleteGroup [group] ", "red"),colored("Example: deleteGroup Salesman","white"))
+            return False
         if deleteGroup(args[0]) == False:
             print(colored("[-] Failed to delete the group " + args[0] + "!", "red"))
             return True
         print(colored("[+] You've succesfully deleted the group " + args[0], "green"))
         return False
+
+def listUsers():
+    userTable = getUserTable()
+    for user in userTable:
+        UUID = user[0].decode()
+        string = UUID
+        for elem in user[1:]:
+            string += " " + str(elem)
+        print(colored(string,"yellow"))
