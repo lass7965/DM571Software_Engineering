@@ -106,17 +106,20 @@ class user:
         print(colored(table,"yellow"))
 
     def listOfGroups(self):
+        groups = listGroups()
         print(colored(listGroups(), "yellow"))
+        return groups
 
     def createGroup(self, args): #new group as arg
         if (len(args) != 1):
             print(colored("[-] You have entered the wrong arguments!", "red"))
             print(colored("Format is:\ncreategroup [group] ", "red"),colored("Example: creategroup cleaner", "white"))
-            return
+            return False
         if createGroup(args[0]) == False:
             print(colored("[-] Failed to add " + args[0] + " as a group","red"))
-            return
+            return False
         print(colored("[+]You've succesfully added " + str(args[0]) + " as a group","green"))
+        return True
 
     def addGroup(self, args): #group
         if (len(args) != 1):
@@ -156,10 +159,9 @@ class user:
         return False
 
 def listUsers():
-    userTable = getUserTable()
+    userTable = getUsers()
+    table = PrettyTable(["Name","Email","Permission"])
     for user in userTable:
-        UUID = user[0].decode()
-        string = UUID
-        for elem in user[1:]:
-            string += " " + str(elem)
-        print(colored(string,"yellow"))
+        table.add_row(user)
+    print(colored(table,"yellow"))
+    return table

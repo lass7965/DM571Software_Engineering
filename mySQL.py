@@ -13,9 +13,9 @@ except:
 
 
 ########## User table ##########
-def getUserTable():
+def getUsers():
     cursor = database.cursor()
-    cursor.execute("SELECT * FROM User")
+    cursor.execute("SELECT username,Email, permission FROM User")
     ret = cursor.fetchall()
     cursor.close()
     return ret

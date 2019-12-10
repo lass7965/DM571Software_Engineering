@@ -10,6 +10,14 @@ def printHelp():
     print(colored("listUpcomingShows [YYYY-MM-dd] [hh:mm]", "white", attrs=["bold"]),
           colored("\nList all shows scheduled to be run from today until a given date", "white"),
           colored("\nExample: listUpcomingShows 2019-11-25 08:00\n", "grey"))
+    print(colored("listUnoccupiedShows", "white", attrs=["bold"]),
+          colored("\nView all unoccupied shifts you can assigned youself to\n", "white"))
+    print(colored("listForShow [movie]", "white", attrs=["bold"]),
+          colored("\nList all shifts for a given show", "white"),
+          colored("\nExample: listForShow Jumanji\n", "grey"))
+    print(colored("changePassword [oldPassword] [newPassword]", "white", attrs=["bold"]),
+          colored("\nChange your password into something new", "white"),
+          colored("\nExample: changePassword qwerty helloworld\n", "grey"))
 
 
 
@@ -71,5 +79,8 @@ while (True):
         main()
         break
     elif createOrLogin.lower() == "n":
-        createUser()
+        username = input("Please enter a username\n")
+        password = input("Please enter your password\n")
+        email = input("Enter a email please\n")
+        createUser(username,password,email,1)
         break
