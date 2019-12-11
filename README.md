@@ -9,10 +9,16 @@ implementing it in memory, so all volunteers can access the updated roster from 
 To view the database, you can simply login with the database credentials given below. 
 
 ## Requirements
-A needed module to run the code is mysql-connector 
-which can be downloaded through pip, or through your chosen IDE.
+Meeded modules to run the code is mysql-connector, prettyTable, and termcolor
+which can be downloaded through pip with the following commands, or through your chosen IDE.
 ```bash
 pip install mysql-connector-python
+```
+```bash
+pip install PrettyTable
+```
+```bash
+pip install termcolor
 ```
 ## Guide
 To run the code simply just run the "main.py" file. 
