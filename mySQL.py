@@ -41,9 +41,11 @@ def createUser(username, password, email, permission):
         cursor.execute(query)
         database.commit()
         cursor.close()
+        return True
     except:
         print("User or email is already used")
         cursor.close()
+        return False
 
 ########## Login table ##########
 def checkPasswd(username,passwd):
@@ -55,6 +57,7 @@ def checkPasswd(username,passwd):
     try:
         cursor.fetchone()[0] #This command fails if user and password does not match.
         cursor.close()
+        updateLastLogin(UUID)
         return True
     except:
         cursor.close()
@@ -72,8 +75,7 @@ def changePassword(username, oldpasswd, newpasswd):
     cursor.close()
     return True
 
-def updateLastLogin(username):
-    UUID = getUUID(username)
+def updateLastLogin(UUID):
     cursor = database.cursor()
     today = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     cursor.execute("UPDATE Login SET Last_Login = '"+today+"' WHERE Login.UserID = '%s'" % UUID)
@@ -169,7 +171,7 @@ def deleteGroup(grp):
 ########## Roster table ##########
 def getShowsFromTitle(movie):
     cursor = database.cursor()
-    query = "SELECT t1.date, t1.movie_title, t1.grp, Username FROM (SELECT * FROM Roster WHERE Roster.Movie_Title = '%s') AS t1 INNER JOIN User t2 ON t1.UserID = t2.UserID;" %movie
+    query = "SELECT t1.date, t1.movie_title, t1.grp, Username FROM (SELECT * FROM Roster WHERE Roster.Movie_Title = '%s') AS t1 INNER JOIN User t2 ON t1.UserID = t2.UserID OR t1.UserID IS NULL ORDER BY t1.date;" %movie
     cursor.execute(query)
     ret = cursor.fetchall()
     cursor.close()
@@ -177,7 +179,7 @@ def getShowsFromTitle(movie):
 
 def getShowsFromDate(fromdate):
     cursor = database.cursor()
-    query = "SELECT t1.date, t1.movie_title, t1.grp, Username FROM (SELECT * FROM Roster WHERE Roster.Date = '%s') AS t1 INNER JOIN User t2 ON t1.UserID = t2.UserID" % fromdate
+    query = "SELECT t1.date, t1.movie_title, t1.grp, Username FROM (SELECT * FROM Roster WHERE Roster.Date = '%s') AS t1 INNER JOIN User t2 ON t1.UserID = t2.UserID OR t1.UserID IS NULL ORDER BY t1.date" % fromdate
     cursor.execute(query)
     ret = cursor.fetchall()
     cursor.close()
@@ -185,8 +187,15 @@ def getShowsFromDate(fromdate):
 
 def getShowsFromDate(fromdate, todate):
     cursor = database.cursor()
-    query = "SELECT t1.date, t1.movie_title, t1.grp, Username FROM (SELECT * FROM Roster WHERE Roster.Date >= '%s' AND Roster.Date < '%s') AS t1 INNER JOIN User t2 ON t1.UserID = t2.UserID" %(fromdate, todate)
+    query = "SELECT t1.date, t1.movie_title, t1.grp, Username FROM (SELECT * FROM Roster WHERE Roster.Date >= '%s' AND Roster.Date < '%s') AS t1 INNER JOIN User t2 ON t1.UserID = t2.UserID OR t1.UserID IS NULL ORDER BY t1.date" %(fromdate, todate)
     cursor.execute(query)
+    ret = cursor.fetchall()
+    cursor.close()
+    return ret
+
+def getUnoccupied():
+    cursor = database.cursor()
+    cursor.execute("SELECT t1.date, t1.Movie_Title, t1.Grp, t1.UserID FROM Roster AS t1 WHERE UserID IS NULL")
     ret = cursor.fetchall()
     cursor.close()
     return ret
@@ -202,7 +211,7 @@ def getShowsForUser(username):
 
 def getShowsForGroup(group):
     cursor = database.cursor()
-    query = "SELECT * FROM Roster WHERE Roster.Grp = '%s'" % group
+    query = "SELECT t1.date, t1.movie_title, t1.grp, Username FROM (SELECT * FROM Roster WHERE Roster.Grp = '%s') AS t1 INNER JOIN User t2 ON t1.UserID = t2.UserID OR t1.UserID IS NULL ORDER BY t1.date" % group
     cursor.execute(query)
     ret = cursor.fetchall()
     cursor.close()

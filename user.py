@@ -73,7 +73,7 @@ class user:
 
     def listUnoccupiedShows(self):
         try:
-            shows = getShowsForUser("None")
+            shows = getUnoccupied()
         except:
             print(colored("[-] No unoccupied shows found","red"))
         table = PrettyTable(["Date", "Movie Title", "Group", "User ID"])
@@ -111,7 +111,6 @@ class user:
         return True
 
     def listOfGroups(self):
-        groups = listGroups()
         print(colored(listGroups(), "yellow"))
         return True
 
@@ -135,6 +134,7 @@ class user:
             print(colored("[-] Failed to add you to the group " + args[0] +"!", "red"))
             return False
         print(colored("[+] You've succesfully added yourself to the group " + args[0],"green"))
+        self.groups = getGroup(self.username)
         return True
 
     def listMembersOfGroup(self,args):
@@ -150,6 +150,7 @@ class user:
             print(colored("[-] Failed to remove you from the group " + args[0] + "!", "red"))
             return False
         print(colored("[+] You've succesfully removed yourself from the group " + args[0], "green"))
+        self.groups = getGroup(self.username)
         return True
 
     def deleteGroup(self, args):
