@@ -15,7 +15,7 @@ which can be downloaded through pip, or through your chosen IDE.
 pip install mysql-connector-python
 ```
 ## Guide
-When running the code, simply just run the "main.py" file. 
+To run the code simply just run the "main.py" file. 
 
 There is mainly 2 phases in the code:
 ### Part 1 - Login phase
