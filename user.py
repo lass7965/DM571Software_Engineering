@@ -27,7 +27,7 @@ class user:
                 except:
                     print(colored("[-] Failed to add shift, please try again!","red"))
                     return False
-
+        return False
     def viewRoster(self): #Roster [Date, Movie_Title, Group, UserID]
         table = PrettyTable(["Date", "Movie Title", "Group", "User ID"])
         for group in self.groups:
@@ -39,6 +39,7 @@ class user:
             for show in shows:
                 table.add_row(show)
         print(table)
+        return True
 
     def cancelShift(self, args): #dato, dato, movie_title, group
         if (len(args) != 4):
@@ -68,6 +69,7 @@ class user:
         for show in shows:
             table.add_row(show)
         print(table)
+        return True
 
     def listUnoccupiedShows(self):
         try:
@@ -78,22 +80,24 @@ class user:
         for show in shows:
             table.add_row(show)
         print(colored(table,"yellow"))
+        return True
 
     def logOut(self):
         print(colored("[+] Logging out.."),"green")
+        return True
 
     def changePassword(self, args):
         if (len(args) != 2):
             print(colored("[-] You have entered the wrong arguments!", "red"))
             print(colored("Format is:\nchangePassowrd [oldPassword] [newPassword]", "red"),
                   colored("Example: changePassword qwerty helloworld", "white"))
-            return
+            return False
         ret = changePassword(self.username, args[0], args[1])
         if ret == False:
             print(colored("[-] Wrong old password entered!", "red"))
-            return
+            return False
         print(colored("[+] Password changed!", "green"))
-
+        return True
     def listForShow(self, args): #movie
         if (len(args) != 1):
             print(colored("[-] You have entered the wrong arguments!", "red"))
@@ -104,11 +108,12 @@ class user:
         for show in shows:
             table.add_row(show)
         print(colored(table,"yellow"))
+        return True
 
     def listOfGroups(self):
         groups = listGroups()
         print(colored(listGroups(), "yellow"))
-        return groups
+        return True
 
     def createGroup(self, args): #new group as arg
         if (len(args) != 1):
@@ -143,9 +148,9 @@ class user:
             return False
         if removeUserFromGroup(self.username, args[0]) == False:
             print(colored("[-] Failed to remove you from the group " + args[0] + "!", "red"))
-            return True
+            return False
         print(colored("[+] You've succesfully removed yourself from the group " + args[0], "green"))
-        return False
+        return True
 
     def deleteGroup(self, args):
         if (len(args) != 1):
@@ -154,9 +159,9 @@ class user:
             return False
         if deleteGroup(args[0]) == False:
             print(colored("[-] Failed to delete the group " + args[0] + "!", "red"))
-            return True
+            return False
         print(colored("[+] You've succesfully deleted the group " + args[0], "green"))
-        return False
+        return True
 
 def listUsers():
     userTable = getUsers()
@@ -164,4 +169,4 @@ def listUsers():
     for user in userTable:
         table.add_row(user)
     print(colored(table,"yellow"))
-    return table
+    return True
