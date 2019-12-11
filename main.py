@@ -10,6 +10,12 @@ def printHelp():
     print(colored("listUpcomingShows [YYYY-MM-dd] [hh:mm]", "white", attrs=["bold"]),
           colored("\nList all shows scheduled to be run from today until a given date", "white"),
           colored("\nExample: listUpcomingShows 2019-11-25 08:00\n", "grey"))
+    print(colored("addGroup [group]", "white", attrs=["bold"]),
+          colored("\nAssign yourself to a given group", "white"),
+          colored("\nExample: addGroup salesperson\n", "grey"))
+    print(colored("removeGroup [group]", "white", attrs=["bold"]),
+          colored("\nRemove yourself to a given group", "white"),
+          colored("\nExample: removeGroup salesperson\n", "grey"))
     print(colored("listUnoccupiedShows", "white", attrs=["bold"]),
           colored("\nView all unoccupied shifts you can assigned youself to\n", "white"))
     print(colored("listForShow [movie]", "white", attrs=["bold"]),
