@@ -24,6 +24,20 @@ def printHelp():
     print(colored("changePassword [oldPassword] [newPassword]", "white", attrs=["bold"]),
           colored("\nChange your password into something new", "white"),
           colored("\nExample: changePassword qwerty helloworld\n", "grey"))
+    print(colored("cancelShift [YYYY-MM-dd] [HH:mm] [movie] [group] ", "white", attrs=["bold"]),
+          colored("\nCancel a shift", "white"),
+          colored("\nExample: cancelShift 2019-11-25 08:00 Jumanji Salesperson\n", "grey"))
+    print(colored("creategroup [group] ", "white", attrs=["bold"]),
+          colored("\nCreates a group", "white"),
+          colored("\nExample: creategroup cleaner\n", "grey"))
+    print(colored("deleteGroup [group] ", "white", attrs=["bold"]),
+          colored("\nDeletes a group", "white"),
+          colored("\nExample: deleteGroup Salesman\n", "grey"))
+    print(colored("listMembersOfGroup", "white", attrs=["bold"]),
+          colored("\nLists all the users who are in the given group", "white"),
+          colored("\nExample: listMembersOfGroup\n", "grey"))
+    print(colored("logOut", "white", attrs=["bold"]),
+          colored("\nLogs out of the current session\n", "grey"))
 
 
 
