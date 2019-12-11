@@ -171,7 +171,7 @@ def deleteGroup(grp):
 ########## Roster table ##########
 def getShowsFromTitle(movie):
     cursor = database.cursor()
-    query = "SELECT t1.date, t1.movie_title, t1.grp, Username FROM (SELECT * FROM Roster WHERE Roster.Movie_Title = '%s') AS t1 INNER JOIN User t2 ON t1.UserID = t2.UserID OR t1.UserID IS NULL ORDER BY t1.date;" %movie
+    query = "SELECT t1.date, t1.movie_title, t1.grp, Username FROM (SELECT * FROM Roster WHERE Roster.Movie_Title = '%s') AS t1 INNER JOIN User t2 ON t1.UserID = t2.UserID OR t2.UserID IS NULL ORDER BY t1.date;" %movie
     cursor.execute(query)
     ret = cursor.fetchall()
     cursor.close()
@@ -179,7 +179,7 @@ def getShowsFromTitle(movie):
 
 def getShowsFromDate(fromdate):
     cursor = database.cursor()
-    query = "SELECT t1.date, t1.movie_title, t1.grp, Username FROM (SELECT * FROM Roster WHERE Roster.Date = '%s') AS t1 INNER JOIN User t2 ON t1.UserID = t2.UserID OR t1.UserID IS NULL ORDER BY t1.date" % fromdate
+    query = "SELECT t1.date, t1.movie_title, t1.grp, Username FROM (SELECT * FROM Roster WHERE Roster.Date = '%s') AS t1 INNER JOIN User t2 ON t1.UserID = t2.UserID OR t2.UserID IS NULL ORDER BY t1.date" % fromdate
     cursor.execute(query)
     ret = cursor.fetchall()
     cursor.close()
@@ -187,7 +187,7 @@ def getShowsFromDate(fromdate):
 
 def getShowsFromDate(fromdate, todate):
     cursor = database.cursor()
-    query = "SELECT t1.date, t1.movie_title, t1.grp, Username FROM (SELECT * FROM Roster WHERE Roster.Date >= '%s' AND Roster.Date < '%s') AS t1 INNER JOIN User t2 ON t1.UserID = t2.UserID OR t1.UserID IS NULL ORDER BY t1.date" %(fromdate, todate)
+    query = "SELECT t1.date, t1.movie_title, t1.grp, Username FROM (SELECT * FROM Roster WHERE Roster.Date >= '%s' AND Roster.Date < '%s') AS t1 INNER JOIN User t2 ON t1.UserID = t2.UserID OR t2.UserID IS NULL ORDER BY t1.date" %(fromdate, todate)
     cursor.execute(query)
     ret = cursor.fetchall()
     cursor.close()
