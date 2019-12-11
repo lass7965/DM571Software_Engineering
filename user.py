@@ -19,7 +19,7 @@ class user:
         movie = args[2]
         group = args[3]
         for i in self.groups:
-            if i[0] == group:
+            if i == group:
                 try:
                     addShift(self.username, date, group, movie)
                     print(colored("[+] Successfully added shift!", "green"))
