@@ -44,6 +44,9 @@ def loginTest():
         print("The group cleaner after you have removed yourself:")
         currentuser.listMembersOfGroup(["cleaner"])
         print("[TEST 10]: " + str(test10))
+        print("\n[TEST 11]\nTesting if password can be changed, expected output: True")
+        test11 = currentuser.changePassword(["12345","123"]) is True
+        print("[TEST 11]: " + str(test11))
     cursor = database.cursor()
     cursor.execute("DELETE FROM User WHERE Username='test'")
     cursor.close()

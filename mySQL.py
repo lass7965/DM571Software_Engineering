@@ -200,15 +200,6 @@ def getUnoccupied():
     cursor.close()
     return ret
 
-def getShowsForUser(username):
-    UUID = getUUID(username)
-    cursor = database.cursor()
-    query = "SELECT t1.Date, t1.Movie_Title, t1.Grp, Username FROM (SELECT * FROM Roster WHERE Roster.UserID = '%s') AS t1 INNER JOIN User t2 ON t1.UserID = t2.UserID" % UUID
-    cursor.execute(query)
-    ret = cursor.fetchall()
-    cursor.close()
-    return ret
-
 def getShowsForGroup(group):
     cursor = database.cursor()
     query = "SELECT t1.date, t1.movie_title, t1.grp, Username FROM (SELECT * FROM Roster WHERE Roster.Grp = '%s') AS t1 INNER JOIN User t2 ON t1.UserID = t2.UserID OR t1.UserID IS NULL ORDER BY t1.date" % group

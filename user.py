@@ -138,6 +138,9 @@ class user:
         return True
 
     def listMembersOfGroup(self,args):
+        if (len(args) != 1):
+            print(colored("[-] You have entered the wrong arguments!", "red"))
+            print(colored("Format is:\nlistMembersOfGroup [group] ", "red"), colored("Example: listMembersOfGroup Salesman", "white"))
         print(colored(listMemberOfGroup(args[0]),"yellow"))
         return True
 
