@@ -39,9 +39,6 @@ def printHelp():
     print(colored("logOut", "white", attrs=["bold"]),
           colored("\nLogs out of the current session\n", "grey"))
 
-
-
-
 def main():
     username = input("Enter your username\n")
     password = input("Enter your password\n")
