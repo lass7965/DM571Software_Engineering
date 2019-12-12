@@ -34,6 +34,9 @@ def loginTest():
         print("\n[TEST 8]\nTesting if shift can be enlisted, expected output: True")
         test8 = currentuser.takeShift(["2019-12-28","12:00","Jack_and_Jill" ,"salesperson"]) is True
         print("[TEST 8]: " + str(test8))
+        print("\n[TEST 8.e]\nTesting if shift can be enlisted with the wrong amount of arguments, expected output: False")
+        test8e = currentuser.takeShift(["2019-12-28", "12:00", "Jack_and_Jill"]) is False
+        print("[TEST 8.e]: " + str(test8e))
         print("\n[TEST 9]\nTesting if shift can be cancelled, expected output: True")
         test9 = currentuser.cancelShift(["2019-12-28","12:00","Jack_and_Jill" ,"salesperson"]) is True
         print("[TEST 9]: " + str(test9))
